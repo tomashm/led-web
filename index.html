@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="nb">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#142820">
+  <meta name="description" content="Gjør 4608 × 108 LED-videoer klare til avspilling. Tre rader på hvit Full HD-flate, med lyd. Alt skjer lokalt i nettleseren.">
+  <title>LED-verktøy · Fra stripe til skjerm</title>
+  <link rel="stylesheet" href="./styles.css">
+  <script type="module" src="./app.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="./" aria-label="LED-verktøy, forsiden"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span>LED<span class="brand-light">verktøy</span></a>
+    <span class="local-badge"><span class="status-dot"></span>Lokalt i nettleseren</span>
+  </header>
+  <main>
+    <div class="intro">
+      <p class="eyebrow">KLARGJØRING FOR LED-SKJERM</p>
+      <h1>Fra stripe<br>til <span>skjerm.</span></h1>
+      <p class="lead">Brett om en 4608 × 108-video til tre rader på en hvit Full HD-flate. Samme innhold. Lyden beholdes.</p>
+    </div>
+
+    <div class="workspace">
+      <section class="file-panel" aria-labelledby="source-heading">
+        <div class="section-heading"><span class="step">01</span><h2 id="source-heading">Velg LED-video</h2><span class="small-tag">4608 × 108</span></div>
+        <label class="dropzone" id="dropzone">
+          <input id="file-input" type="file" accept=".mp4,video/mp4" aria-label="Velg en MP4-video på 4608 × 108">
+          <span class="file-symbol" aria-hidden="true">↥</span>
+          <span class="drop-title">Slipp videoen her</span>
+          <span class="drop-copy">eller klikk for å velge en fil</span>
+          <span class="drop-format">MP4 · 4608 × 108 piksler</span>
+        </label>
+        <div id="file-details" class="file-details" hidden>
+          <div class="file-title"><span class="file-kind">MP4</span><span id="file-name"></span></div>
+          <dl class="metadata">
+            <div><dt>Oppløsning</dt><dd id="source-size">—</dd></div>
+            <div><dt>Varighet</dt><dd id="source-duration">—</dd></div>
+            <div><dt>Bildefrekvens</dt><dd id="source-fps">—</dd></div>
+            <div><dt>Filstørrelse</dt><dd id="source-bytes">—</dd></div>
+          </dl>
+          <p class="audio-info" id="source-audio"></p>
+        </div>
+        <p class="privacy-note">Filen lastes aldri opp. Behandlingen skjer på maskinen din.</p>
+      </section>
+
+      <section class="output-panel" aria-labelledby="output-heading">
+        <div class="section-heading"><span class="step">02</span><h2 id="output-heading">Ferdig skjermoppsett</h2><span class="small-tag">1920 × 1080</span></div>
+        <div class="layout-preview" role="img" aria-label="En 1920 ganger 1080 hvit flate. Tre rader på 1536 ganger 108 ligger øverst til venstre. Venstre tredel øverst, midtre tredel i midten og høyre tredel nederst.">
+          <div class="screen-stack"><div class="strip strip-one"><span>1</span>Venstre tredel</div><div class="strip strip-two"><span>2</span>Midtre tredel</div><div class="strip strip-three"><span>3</span>Høyre tredel</div></div>
+          <span class="white-label">Hvit bakgrunn</span><span class="origin-label">Plassering: x 0 · y 0</span>
+        </div>
+        <div class="output-spec"><span>3 × 1536 × 108</span><span>Ingen skalering</span><span>MP4 / H.264</span></div>
+        <div class="actions"><button id="convert" class="button primary" disabled>Konverter hele videoen <span aria-hidden="true">↗</span></button><button id="sample" class="button secondary" disabled>Lag 5 sek prøve</button></div>
+        <p class="performance-note">Store videoer tar tid i nettleseren. Hold fanen åpen til filen er klar.</p>
+      </section>
+    </div>
+
+    <section id="status-panel" class="status-panel" hidden aria-labelledby="status-heading">
+      <div class="status-top"><div><p class="eyebrow" id="status-label">ARBEIDER</p><h2 id="status-heading" role="status" aria-live="polite"></h2></div><button id="cancel" class="button secondary">Avbryt</button></div>
+      <progress id="progress" max="100" aria-label="Konverteringsfremdrift"></progress>
+      <div class="progress-caption"><span id="status-message"></span><span id="progress-number"></span></div>
+    </section>
+    <div id="error-panel" class="error-panel" role="alert" hidden></div>
+
+    <section id="result-panel" class="result-panel" hidden aria-labelledby="result-heading">
+      <div class="result-top"><div><p class="eyebrow">FERDIG</p><h2 id="result-heading">Klar til skjermen.</h2><p id="result-info"></p></div><a id="download" class="button primary">Last ned MP4 <span aria-hidden="true">↓</span></a></div>
+      <video id="result-video" controls playsinline preload="metadata" aria-label="Forhåndsvisning av den ferdige videoen"></video>
+    </section>
+
+    <details class="technical"><summary>Slik fungerer ombrekkingen</summary><div class="technical-content"><p>Videoen deles fra venstre mot høyre i tre like deler. Disse stables ovenfra og ned til 1536 × 324 og legges ved (0, 0) på en hvit 1920 × 1080-flate.</p><p>Bildene skaleres ikke. Utfilen kodes med H.264, CRF 18, preset fast og yuv420p. Bildefrekvensen beholdes, og eksisterende lydspor kopieres.</p><p>Motoren lastes inn når du velger en fil. Nettleseren trenger ledig minne til både behandling og utfil. Filer på 2 GB eller mer avvises. En liten fil er ingen garanti for at en lang konvertering får plass i minnet.</p><p>Bygget med <a href="https://github.com/ffmpegwasm/ffmpeg.wasm" target="_blank" rel="noreferrer">FFmpeg.wasm</a>. <a href="./THIRD_PARTY.md">Versjoner og lisenser</a>.</p></div></details>
+    <details id="log-panel" class="technical" hidden><summary>Konverteringslogg</summary><pre id="log"></pre></details>
+  </main>
+  <footer><span>LED-verktøy</span><span>4608 × 108 <span aria-hidden="true">→</span> 1920 × 1080</span></footer>
+  <noscript><p class="error-panel">Aktiver JavaScript for å konvertere video i nettleseren.</p></noscript>
+  <script>
+    // Module scripts are blocked on file://, so this message must use a classic script.
+    if (location.protocol === 'file:') {
+      document.getElementById('file-input').disabled = true;
+      document.getElementById('error-panel').hidden = false;
+      document.getElementById('error-panel').textContent = 'Åpne appen via en webadresse eller en lokal webserver. Se README.md i denne mappen. Direkte åpning fra disken støtter ikke videomotoren.';
+    }
+  </script>
+</body>
+</html>
