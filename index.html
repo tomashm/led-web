@@ -68,6 +68,15 @@
       <video id="result-video" controls playsinline preload="metadata" aria-label="Forhåndsvisning av den ferdige videoen"></video>
     </section>
 
+    <section class="local-option" aria-labelledby="local-heading">
+      <div>
+        <p class="eyebrow">KJØR MED INSTALLERT FFMPEG</p>
+        <h2 id="local-heading">Bruk scriptet på maskinen din.</h2>
+        <p>Har du FFmpeg og ffprobe installert? Last ned Bash-scriptet for samme ombrekking med lyd. Det passer også for store filer og lange videoer.</p>
+        <code>bash led-embed.sh "input.mp4" "output.mp4"</code>
+      </div>
+      <a class="button secondary" href="./led-embed.sh" download="led-embed.sh">Last ned shell-script <span aria-hidden="true">↓</span></a>
+    </section>
     <details class="technical"><summary>Slik fungerer ombrekkingen</summary><div class="technical-content"><p>Videoen deles fra venstre mot høyre i tre like deler. Disse stables ovenfra og ned til 1536 × 324 og legges ved (0, 0) på en hvit 1920 × 1080-flate.</p><p>Bildene skaleres ikke. Utfilen kodes med H.264, CRF 18, preset fast og yuv420p. Bildefrekvensen beholdes, og eksisterende lydspor kopieres.</p><p>Motoren lastes inn når du velger en fil. Nettleseren trenger ledig minne til både behandling og utfil. Filer på 2 GB eller mer avvises. En liten fil er ingen garanti for at en lang konvertering får plass i minnet.</p><p>Bygget med <a href="https://github.com/ffmpegwasm/ffmpeg.wasm" target="_blank" rel="noreferrer">FFmpeg.wasm</a>. <a href="./THIRD_PARTY.md">Versjoner og lisenser</a>.</p></div></details>
     <details id="log-panel" class="technical" hidden><summary>Konverteringslogg</summary><pre id="log"></pre></details>
   </main>

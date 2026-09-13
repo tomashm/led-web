@@ -1,6 +1,6 @@
 # LED-verktøy
 
-[Åpne webappen](https://tomashm.github.io/led-web/) · [GitHub-repo](https://github.com/tomashm/led-web)
+[Åpne webappen](https://haheim.net/led-web/) · [GitHub-repo](https://github.com/tomashm/led-web)
 
 Statisk HTML, CSS og JavaScript. Ingen backend, opplasting, database, Node-avhengighet eller byggesteg. Videoen behandles i nettleseren med FFmpeg.wasm. Motoren følger med i `vendor/`; ingen CDN-kall er nødvendige ved bruk.
 
@@ -18,6 +18,8 @@ python3 -m http.server 8080 --bind 127.0.0.1
 
 GitHub Actions publiserer den statiske appen til GitHub Pages ved hver push til `main`. Workflowen ligger i `.github/workflows/pages.yml`. GitHub Pages bruker «GitHub Actions» som publiseringskilde. Ingen bygging eller pakkeinstallasjon inngår i publiseringen.
 
+Siden arver kontoens eksisterende GitHub Pages-domene `haheim.net`. HTTPS er påkrevd.
+
 Legg hele denne mappen på en statisk webserver, inkludert `vendor/`. Bruk HTTPS. Filene fungerer også i en undermappe. Serveren må levere `.js` som JavaScript og `.wasm` som `application/wasm`.
 
 Enkelttrådet FFmpeg krever ikke COOP/COEP-headere eller SharedArrayBuffer. `vendor/core/ffmpeg-core.wasm` er omtrent 32 MB; sjekk at verten tillater filer av denne størrelsen. Ingen tjeneste for videokonvertering eller appserver er nødvendig.
@@ -34,12 +36,23 @@ Enkelttrådet FFmpeg krever ikke COOP/COEP-headere eller SharedArrayBuffer. `ven
 
 WORKERFS leser kildefilen ved behov i stedet for å kopiere hele innfilen inn i motorens minne. Utfilen og kodeken bruker fortsatt minne. Filer på minst 2 milliarder byte avvises; også mindre filer kan bruke mer minne enn nettleseren tillater. Nettleserkoding er vesentlig tregere enn vanlig FFmpeg. Test en kort prøve på den aktuelle maskinen først.
 
+## Bruk lokalt installert FFmpeg
+
+[Last ned led-embed.sh](https://haheim.net/led-web/led-embed.sh), eller bruk scriptet som følger med repoet. Webappen har også en nedlastingsknapp. Krever Bash, FFmpeg og ffprobe i PATH.
+
+```sh
+bash led-embed.sh "input_4608x108.mp4" "output_1920x1080.mp4"
+```
+
+Scriptet bruker samme geometri og kvalitetsinnstillinger, kopierer eksisterende lydspor og overskriver ikke filer. Uten utfilnavn brukes `<inputnavn>_stablet_1920x1080.mp4`.
+
 ## Filer
 
 - `index.html`: grensesnitt.
 - `styles.css`: responsiv utforming.
 - `app.js`: filvalg, fremdrift, avbryt, forhåndsvisning og nedlasting.
 - `conversion.js`: FFmpeg-kjøring og validering.
+- `led-embed.sh`: nedlastbart script for lokalt installert FFmpeg.
 - `vendor/`: versjonslåst FFmpeg.wasm og motor.
 - `jsconfig.json`: valgfri typesjekk med `tsc -p jsconfig.json`; ingen kompilering kreves for kjøring.
 
